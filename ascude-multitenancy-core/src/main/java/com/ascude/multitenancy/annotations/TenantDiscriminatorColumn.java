@@ -12,7 +12,3 @@ import java.lang.annotation.*;
 public @interface TenantDiscriminatorColumn {
 
 }
-
-//public @interface TenantField {
-//    // 无参数，仅作为标识
-//}
