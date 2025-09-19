@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Multitenant {
-    
+
     /**
      * 租户隔离级别
      */

@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.example.multitenant</groupId>
+        <groupId>com.ascude.multitenacy</groupId>
         <artifactId>spring-multitenacy</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <packaging>jar</packaging>
-    <name>ascude-multitenacy-core</name>
+    <name>Spring Multitenacy::Core</name>
     <artifactId>ascude-multitenacy-core</artifactId>
 
     <dependencies>

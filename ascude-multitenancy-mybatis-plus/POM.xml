@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.example.multitenant</groupId>
+        <groupId>com.ascude.multitenacy</groupId>
         <artifactId>spring-multitenacy</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
@@ -11,8 +11,19 @@
 
     <packaging>jar</packaging>
     <artifactId>ascude-multitenancy-mybatis-plus</artifactId>
+    <name>Spring Multitenacy::Mybatis-Plus</name>
 
     <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-core</artifactId>
+            <version>3.5.12</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.5.12</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
