@@ -34,5 +34,4 @@ logging:
     path: /home/log/mysiteforme
   level:
     root: INFO
-    com.mysiteforme: DEBUG
     org.springframework: INFO

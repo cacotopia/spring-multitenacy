@@ -46,10 +46,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -91,11 +87,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
-
         <!--下面是自己引入的架包-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -119,19 +110,6 @@
             <version>${commons-codec.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${fileupload.version}</version>
-            <!-- 排除旧版 commons-io -->
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- 显式引入安全版 commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
@@ -143,12 +121,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-            <version>2.3</version>
         </dependency>
 
         <dependency>
@@ -207,12 +179,6 @@
             <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
         </dependency>
 
-        <!--定时任务-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-
         <!-- Google jar -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -233,13 +199,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--阿里云OSS上传-->
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
-            <version>3.17.0</version>
-        </dependency>
-
         <!--网页抓取-->
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -254,24 +213,11 @@
             <version>5.8.16</version>
         </dependency>
 
-        <!--对分词索引查询解析-->
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-queryparser</artifactId>
-            <version>8.10.0</version>
-        </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- Jakarta EE 9+ 的 Servlet API-->

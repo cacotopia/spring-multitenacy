@@ -16,25 +16,6 @@ spring:
   transaction:
     default-timeout: 30s
     rollback-on-commit-failure: true
-  mail:
-    host: smtp.163.com
-    port: 465
-    protocol: smtp
-    username: mysiteforme@163.com
-    password: DFbdcXzG9C3wueLP
-    properties:
-      mail:
-        smtp:
-          port:  465
-          auth: true
-          starttls:
-            enable: true
-          connectiontimeout: 10000
-          timeout: 10000
-          socketFactory:
-            fallback: false
-            class: javax.net.ssl.SSLSocketFactory
-    test-connection: true
   #视图配置
   mvc:
     static-path-pattern: /static/**
@@ -97,7 +78,7 @@ management:
 mybatis-plus:
   mapper-locations: classpath:mapper/**.xml
   #实体扫描，多个package用逗号或者分号隔离
-  type-aliases-package: com.mysiteforme.admin.entity
+  type-aliases-package: com.ascude.multitenancy.demo.entity.entity
   global-config:
     #是否打印MyBatis-Plus 的 LOGO的banner
     banner: false
@@ -107,7 +88,7 @@ mybatis-plus:
       id-type: auto
       table-underline: true
       #自定义填充策略接口实现
-      # meta-object-handler: com.mysiteforme.admin.config.SysMetaObjectHandler
+      # meta-object-handler: com.ascude.multitenancy.demo.config.SysMetaObjectHandler
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false

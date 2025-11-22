@@ -13,8 +13,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,20 +23,6 @@ import java.util.Map;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class BlogArticleServiceImpl extends ServiceImpl<BlogArticleDao, BlogArticle> implements BlogArticleService {
-
-    /**
-     * Redis模板对象
-     */
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    /**
-     * 构造函数注入Redis模板
-     *
-     * @param redisTemplate Redis操作模板
-     */
-    public BlogArticleServiceImpl(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     /**
      * 根据栏目ID清除文章与栏目的关系
@@ -199,17 +183,7 @@ public class BlogArticleServiceImpl extends ServiceImpl<BlogArticleDao, BlogArti
      */
     @Override
     public Integer getArticleClick(Long articleId) {
-        ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-        Integer count = (Integer) operations.get("article_click_id_" + articleId);
-        if (count == null) {
-            BlogArticle blogArticle = baseMapper.selectById(articleId);
-            if (blogArticle.getClick() != null) {
-                count = blogArticle.getClick();
-            } else {
-                count = 0;
-            }
-        }
-        return count;
+        return 0;
     }
 
     /**

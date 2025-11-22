@@ -13,8 +13,6 @@ import com.ascude.multitenancy.demo.util.ResultCode;
 import com.google.common.collect.Lists;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +27,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -40,12 +37,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final CustomExceptionHandlerFilter filter;
 
     private final ApiToolUtil apiToolUtil;
-
-    @Value("${user-path.windows-upload-dic:}")
-    private String windowsBaseUploadDir;
-
-    @Value("${user-path.linux-upload-dic:}")
-    private String linuxBaseUploadDir;
 
     public WebMvcConfig(CustomExceptionHandlerFilter filter, ApiToolUtil apiToolUtil) {
         this.filter = filter;
@@ -148,27 +139,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**", "/favicon.ico").addResourceLocations("classpath:/static/");
-        String uploadDir = getBaseUploadDir();
-        if (StringUtils.isNotBlank(uploadDir)) {
-            registry.addResourceHandler("/upload/**").addResourceLocations(uploadDir);
-        }
-    }
-
-    private String getBaseUploadDir() {
-        String outDir;
-//        if("windows".equals(ToolUtil.getOs())){
-//            outDir = windowsBaseUploadDir;
-//        }else{
-//
-//        }
-        outDir = linuxBaseUploadDir;
-        String filePath = outDir;
-        File file = new File(filePath.replace("file:", ""));
-        if (!file.exists() && !file.mkdirs()) {
-            log.error("创建基础上传目录失败");
-            return null;
-        }
-        return outDir;
     }
 
     /**
@@ -213,31 +183,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public ForwardedHeaderFilter forwardedHeaderFilter() {
         return new ForwardedHeaderFilter();
     }
-
-    /**
-     * 添加拦截器
-     * 拦截已经登录的地址
-     * 排除未登录的地址：/login，/favicon.ico ......
-     */
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new MyHandlerInterceptor())
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/login",
-//                        "/api/auth/refresh",
-//                        "/favicon.ico",
-//                        "/actuator/**",
-//                        "/error",
-//                        "/logout",
-//                        "/upload/**",
-//                        "/genCaptcha",
-//                        "/static/**",
-//                        "/showBlog/**",
-//                        "/register/**",
-//                        "/api/analytics/**",
-//                        "/druid/**");
-//        registry.addInterceptor(new BlogHandlerInterceptor())
-//                .addPathPatterns("/showBlog/**");
-//    }
 
 }
