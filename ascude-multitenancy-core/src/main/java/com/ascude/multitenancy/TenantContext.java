@@ -3,13 +3,13 @@ package com.ascude.multitenancy;
 
 public class TenantContext {
 
-    private static final ThreadLocal<String> currentTenant = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Tenant> currentTenant = new InheritableThreadLocal<>();
 
-    public static String getCurrentTenant() {
+    public static Tenant getCurrentTenant() {
         return currentTenant.get();
     }
 
-    public static void setCurrentTenant(String tenant) {
+    public static void setCurrentTenant(Tenant tenant) {
         currentTenant.set(tenant);
     }
 
