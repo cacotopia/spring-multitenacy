@@ -1,21 +1,15 @@
-#logging.level.org.imaginea: DEBUG
-#spring:
-#  profiles:
-#    active: dev
-
-#开发环境配置
+#测试环境配置
 server:
   #端口
-  port: 8080
-
+  port: 8085
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: test
   #redis配置
   data:
     redis:
-      database: 1
+      database: 0
       host: 127.0.0.1
       port: 6379
       password:      # 密码（默认为空）
@@ -23,7 +17,6 @@ spring:
       lettuce:
         pool:
           enabled: true        # 需要添加此配置
-          max-active: 8
           max-idle: 1000
           max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
           min-idle: 5       # 连接池中的最小空闲连接
@@ -36,14 +29,10 @@ spring:
 
 #日志
 logging:
-  charset:
-    console: UTF-8
   config: classpath:log/logback.xml
   file:
-    path: D:\log\mysiteforme
+    path: /home/log/mysiteforme
   level:
     root: INFO
-    com.mysiteforme.admin.security: DEBUG
-    org.springframework.security.web.FilterChainProxy: DEBUG
-    org.springframework.security: TRACE
-    org.springframework.cache: DEBUG
+    com.mysiteforme: DEBUG
+    org.springframework: INFO
