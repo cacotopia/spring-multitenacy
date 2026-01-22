@@ -1,0 +1,107 @@
+package com.ascude.multitenancy.util;
+
+import com.ascude.multitenancy.TenantContext;
+import com.ascude.multitenancy.annotations.Multitenant;
+import com.ascude.multitenancy.exception.TenantNotFoundException;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * 租户工具类
+ */
+public class TenantUtils {
+
+    private TenantUtils() {
+        // 工具类不允许实例化
+    }
+
+    /**
+     * 获取当前租户ID，如果不存在则抛出异常
+     */
+    public static String getCurrentTenantOrThrow() {
+        String tenantId = TenantContext.getCurrentTenant();
+        if (StringUtils.isBlank(tenantId)) {
+            throw TenantNotFoundException.noTenantInContext();
+        }
+        return tenantId;
+    }
+
+    /**
+     * 获取当前租户ID，如果不存在则返回默认值
+     */
+    public static String getCurrentTenantOrDefault(String defaultTenant) {
+        String tenantId = TenantContext.getCurrentTenant();
+        return StringUtils.isNotBlank(tenantId) ? tenantId : defaultTenant;
+    }
+
+    /**
+     * 检查是否有租户上下文
+     */
+    public static boolean hasTenant() {
+        return StringUtils.isNotBlank(TenantContext.getCurrentTenant());
+    }
+
+    /**
+     * 执行忽略租户上下文的操作
+     */
+    public static <T> T executeIgnoreTenant(TenantCallback<T> callback) {
+        String originalTenant = TenantContext.getCurrentTenant();
+        try {
+            TenantContext.clear();
+            return callback.execute();
+        } finally {
+            if (originalTenant != null) {
+                TenantContext.setCurrentTenant(originalTenant);
+            }
+        }
+    }
+
+    /**
+     * 使用指定租户执行操作
+     */
+    public static <T> T executeWithTenant(String tenantId, TenantCallback<T> callback) {
+        String originalTenant = TenantContext.getCurrentTenant();
+        try {
+            TenantContext.setCurrentTenant(tenantId);
+            return callback.execute();
+        } finally {
+            if (originalTenant != null) {
+                TenantContext.setCurrentTenant(originalTenant);
+            } else {
+                TenantContext.clear();
+            }
+        }
+    }
+
+    /**
+     * 检查实体类是否标注了 @Multitenant 注解
+     */
+    public static boolean isMultitenantEntity(Class<?> entityClass) {
+        return entityClass.isAnnotationPresent(Multitenant.class);
+    }
+
+    /**
+     * 获取实体类的 @Multitenant 注解
+     */
+    public static Multitenant getMultitenantAnnotation(Class<?> entityClass) {
+        return entityClass.getAnnotation(Multitenant.class);
+    }
+
+    /**
+     * 检查表是否应该被忽略（未标注 @Multitenant 或者 ignore=true）
+     */
+    public static boolean shouldIgnoreTable(Class<?> entityClass) {
+        if (!isMultitenantEntity(entityClass)) {
+            return true;
+        }
+        Multitenant annotation = getMultitenantAnnotation(entityClass);
+        return annotation.ignore();
+    }
+
+    /**
+     * 租户回调接口
+     */
+    @FunctionalInterface
+    public interface TenantCallback<T> {
+        T execute();
+    }
+}
