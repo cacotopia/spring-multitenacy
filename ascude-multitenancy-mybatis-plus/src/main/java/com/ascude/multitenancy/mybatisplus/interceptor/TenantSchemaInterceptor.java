@@ -1,5 +1,6 @@
 package com.ascude.multitenancy.mybatisplus.interceptor;
 
+import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.TenantIsolationLevel;
 import com.ascude.multitenancy.config.TenantProperties;
@@ -19,11 +20,11 @@ import java.util.Properties;
  * 用于 Schema 级隔离，在执行 SQL 前切换数据库 Schema
  */
 @Intercepts({
-    @Signature(
-        type = StatementHandler.class,
-        method = "prepare",
-        args = {Connection.class, Integer.class}
-    )
+        @Signature(
+                type = StatementHandler.class,
+                method = "prepare",
+                args = {Connection.class, Integer.class}
+        )
 })
 public class TenantSchemaInterceptor implements Interceptor {
 
@@ -42,20 +43,20 @@ public class TenantSchemaInterceptor implements Interceptor {
             return invocation.proceed();
         }
 
-        String tenantId = TenantContext.getCurrentTenant();
-        
+        Tenant currentTenant = TenantContext.getCurrentTenant();
+
         // 如果没有租户信息，使用默认租户
-        if (StringUtils.isBlank(tenantId)) {
-            tenantId = tenantProperties.getDefaultTenant();
+        if (StringUtils.isBlank(currentTenant.getId())) {
+            currentTenant.setId(tenantProperties.getDefaultTenant());
         }
 
         // 解析 Schema 名称
         String schemaPattern = tenantProperties.getSchemaPattern();
-        String schemaName = TenantPlaceholderResolver.resolveSchemaName(schemaPattern, tenantId);
+        String schemaName = TenantPlaceholderResolver.resolveSchemaName(schemaPattern, currentTenant.getId());
 
         if (StringUtils.isNotBlank(schemaName)) {
             Connection connection = (Connection) invocation.getArgs()[0];
-            
+
             try {
                 // 切换 Schema
                 switchSchema(connection, schemaName);

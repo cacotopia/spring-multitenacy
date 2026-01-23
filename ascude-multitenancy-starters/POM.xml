@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ascude.multitenancy</groupId>
+        <artifactId>spring-multitenancy</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <packaging>pom</packaging>
+    <artifactId>ascude-multitenancy-starters</artifactId>
+    <name>Spring multitenancy::Starters</name>
+
+    <modules>
+        <module>ascude-multitenancy-starter-mybatis-plus</module>
+        <module>ascude-multitenancy-starter-dubbo</module>
+        <module>ascude-multitenancy-starter-web</module>
+    </modules>
+
+</project>

@@ -6,8 +6,8 @@
     <artifactId>spring-multitenancy</artifactId>
     <packaging>pom</packaging>
 
-    <version>1.0-SNAPSHOT</version>
-    <name>Spring Multitenacy</name>
+    <version>${revision}</version>
+    <name>Spring multitenancy</name>
     <url>http://maven.apache.org</url>
 
     <modules>
@@ -15,16 +15,31 @@
         <module>ascude-multitenancy-spring</module>
         <module>ascude-multitenancy-mybatis-plus</module>
         <module>ascude-multitenancy-web</module>
+        <module>ascude-multitenancy-dubbo</module>
+        <module>ascude-multitenancy-starters</module>
+        <!--        <module>ascude-multitenancy-demos</module>-->
     </modules>
 
-    <dependencies>
-        <!--        <dependency>-->
-        <!--            <groupId>junit</groupId>-->
-        <!--            <artifactId>junit</artifactId>-->
-        <!--            <version>3.8.1</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
-    </dependencies>
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <revision>1.0.01-SNAPSHOT</revision>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+        <spring-boot3.version>3.4.1</spring-boot3.version>
+        <junit.version>4.13.2</junit.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

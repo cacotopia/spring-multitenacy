@@ -7,7 +7,6 @@ import com.ascude.multitenancy.mybatisplus.handler.MultitenancyTenantLineHandler
 import com.ascude.multitenancy.mybatisplus.interceptor.TenantSchemaInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
-//import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 
 import java.util.HashMap;
@@ -77,20 +76,20 @@ public class MybatisPlusMultitenancyConfigurer {
      */
     private void configureDynamicTableNameInterceptor(MybatisPlusInterceptor interceptor) {
         DynamicTableNameInnerInterceptor dynamicTableNameInterceptor = new DynamicTableNameInnerInterceptor();
-        
+
         // 配置表名处理器
         Map<String, MultitenancyTableNameHandler> tableNameHandlerMap = new HashMap<>();
         MultitenancyTableNameHandler tableNameHandler = new MultitenancyTableNameHandler(tenantProperties);
-        
+
         // 这里可以配置具体需要处理的表，如果为空则处理所有表
         // tableNameHandlerMap.put("user", tableNameHandler);
         // tableNameHandlerMap.put("product", tableNameHandler);
-        
+
         // 使用通用处理器处理所有表
-        dynamicTableNameInterceptor.setTableNameHandler((sql, tableName) -> 
-            tableNameHandler.dynamicTableName(sql, tableName)
-        );
-        
+//        dynamicTableNameInterceptor.setTableNameHandler((sql, tableName) ->
+//                tableNameHandler.dynamicTableName(sql, tableName)
+//        );
+
         interceptor.addInnerInterceptor(dynamicTableNameInterceptor);
     }
 

@@ -1,0 +1,96 @@
+#公共配置
+server:
+    port: 80
+    tomcat:
+      uri-encoding: UTF-8
+    error:
+      whitelabel:
+        enabled: false
+
+spring:
+  application:
+    name: mysiteforme
+  #激活哪一个环境的配置文件
+  profiles:
+    active: dev # 默认使用开发环境
+  transaction:
+    default-timeout: 30s
+    rollback-on-commit-failure: true
+  #视图配置
+  mvc:
+    static-path-pattern: /static/**
+    pathmatch:
+      matching-strategy: PATH_PATTERN_PARSER
+    problemdetails:
+      enabled: true
+  web:
+    resources:
+      add-mappings: false
+  #连接池配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 公共配置放在这里
+      initialSize: 10
+      maxActive: 100
+      minIdle: 10
+      max-wait: 60000
+      aopPatterns: com.mysiteforme.admin.service
+      minEvictableIdleTimeMillis: 1800000
+      maxEvictableIdleTimeMillis: 1800000
+      timeBetweenEvictionRunsMillis: 60000
+      keepAlive: true
+      filters: stat,slf4j
+      filter:
+        slf4j:
+          enabled: true
+        stat:
+          enabled: true
+          logSlowSql: true
+          slowSqlMillis: 2000
+  quartz:
+    job-store-type: JDBC
+    jdbc:
+      initialize-schema: NEVER
+  #缓存配置
+  cache:
+      type: redis
+      cache-names: mysiteforme
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+#mybatisPlus
+mybatis-plus:
+  mapper-locations: classpath:mapper/**.xml
+  #实体扫描，多个package用逗号或者分号隔离
+  type-aliases-package: com.ascude.multitenancy.demo.entity.entity
+  global-config:
+    #是否打印MyBatis-Plus 的 LOGO的banner
+    banner: false
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+      table-underline: true
+      #自定义填充策略接口实现
+      # meta-object-handler: com.ascude.multitenancy.demo.config.SysMetaObjectHandler
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    # 添加以下配置
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

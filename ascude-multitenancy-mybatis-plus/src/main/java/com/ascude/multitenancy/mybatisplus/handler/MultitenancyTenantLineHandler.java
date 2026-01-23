@@ -1,11 +1,11 @@
 package com.ascude.multitenancy.mybatisplus.handler;
 
+import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.config.TenantProperties;
-//import com.baomidou.mybatisplus .handler.TenantLineHandler;
+import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,18 +29,18 @@ public class MultitenancyTenantLineHandler implements TenantLineHandler {
      */
     @Override
     public Expression getTenantId() {
-        String tenantId = TenantContext.getCurrentTenant();
-        
+        Tenant currentTenant = TenantContext.getCurrentTenant();
+
         // 如果允许空租户且当前为空，返回空字符串
-        if (StringUtils.isBlank(tenantId)) {
+        if (currentTenant != null) {
             if (tenantProperties.isAllowEmptyTenant()) {
                 return new StringValue("");
             }
             // 不允许空租户时返回不可能匹配的值
             return new StringValue("__NO_TENANT__");
         }
-        
-        return new StringValue(tenantId);
+
+        return new StringValue(currentTenant.getId());
     }
 
     /**
@@ -63,12 +63,12 @@ public class MultitenancyTenantLineHandler implements TenantLineHandler {
         if (ignoreTables.contains(tableName)) {
             return true;
         }
-        
+
         // 系统表默认忽略
         if (isSystemTable(tableName)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -80,9 +80,9 @@ public class MultitenancyTenantLineHandler implements TenantLineHandler {
             return false;
         }
         String lowerTableName = tableName.toLowerCase();
-        return lowerTableName.startsWith("sys_") 
-            || lowerTableName.startsWith("qrtz_")
-            || lowerTableName.equals("schema_version");
+        return lowerTableName.startsWith("sys_")
+                || lowerTableName.startsWith("qrtz_")
+                || lowerTableName.equals("schema_version");
     }
 
     /**

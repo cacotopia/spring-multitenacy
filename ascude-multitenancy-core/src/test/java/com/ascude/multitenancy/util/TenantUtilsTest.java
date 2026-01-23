@@ -1,5 +1,6 @@
 package com.ascude.multitenancy.util;
 
+import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.exception.TenantNotFoundException;
 import org.junit.After;
@@ -19,9 +20,9 @@ public class TenantUtilsTest {
 
     @Test
     public void testGetCurrentTenantOrThrow_withTenant() {
-        TenantContext.setCurrentTenant("tenant1");
-        String tenantId = TenantUtils.getCurrentTenantOrThrow();
-        assertEquals("tenant1", tenantId);
+        TenantContext.setCurrentTenant(new Tenant("tenant1"));
+        Tenant tenantId = TenantUtils.getCurrentTenantOrThrow();
+        assertEquals("tenant1", tenantId.getId());
     }
 
     @Test(expected = TenantNotFoundException.class)
@@ -31,9 +32,9 @@ public class TenantUtilsTest {
 
     @Test
     public void testGetCurrentTenantOrDefault() {
-        TenantContext.setCurrentTenant("tenant1");
+        TenantContext.setCurrentTenant(new Tenant("tenant1"));
         assertEquals("tenant1", TenantUtils.getCurrentTenantOrDefault("default"));
-        
+
         TenantContext.clear();
         assertEquals("default", TenantUtils.getCurrentTenantOrDefault("default"));
     }
@@ -41,36 +42,36 @@ public class TenantUtilsTest {
     @Test
     public void testHasTenant() {
         assertFalse(TenantUtils.hasTenant());
-        
-        TenantContext.setCurrentTenant("tenant1");
+
+        TenantContext.setCurrentTenant(new Tenant("tenant1"));
         assertTrue(TenantUtils.hasTenant());
-        
+
         TenantContext.clear();
         assertFalse(TenantUtils.hasTenant());
     }
 
     @Test
     public void testExecuteIgnoreTenant() {
-        TenantContext.setCurrentTenant("tenant1");
-        
+        TenantContext.setCurrentTenant(new Tenant("tenant1"));
+
         String result = TenantUtils.executeIgnoreTenant(() -> {
             assertNull(TenantContext.getCurrentTenant());
             return "executed";
         });
-        
+
         assertEquals("executed", result);
         assertEquals("tenant1", TenantContext.getCurrentTenant());
     }
 
     @Test
     public void testExecuteWithTenant() {
-        TenantContext.setCurrentTenant("tenant1");
-        
+        TenantContext.setCurrentTenant(new Tenant("tenant1"));
+
         String result = TenantUtils.executeWithTenant("tenant2", () -> {
             assertEquals("tenant2", TenantContext.getCurrentTenant());
             return "executed";
         });
-        
+
         assertEquals("executed", result);
         assertEquals("tenant1", TenantContext.getCurrentTenant());
     }

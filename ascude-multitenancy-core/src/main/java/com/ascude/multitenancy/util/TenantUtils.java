@@ -1,9 +1,9 @@
 package com.ascude.multitenancy.util;
 
+import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.annotations.Multitenant;
 import com.ascude.multitenancy.exception.TenantNotFoundException;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 租户工具类
@@ -17,9 +17,9 @@ public class TenantUtils {
     /**
      * 获取当前租户ID，如果不存在则抛出异常
      */
-    public static String getCurrentTenantOrThrow() {
-        String tenantId = TenantContext.getCurrentTenant();
-        if (StringUtils.isBlank(tenantId)) {
+    public static Tenant getCurrentTenantOrThrow() {
+        Tenant tenantId = TenantContext.getCurrentTenant();
+        if (tenantId == null) {
             throw TenantNotFoundException.noTenantInContext();
         }
         return tenantId;
@@ -29,22 +29,22 @@ public class TenantUtils {
      * 获取当前租户ID，如果不存在则返回默认值
      */
     public static String getCurrentTenantOrDefault(String defaultTenant) {
-        String tenantId = TenantContext.getCurrentTenant();
-        return StringUtils.isNotBlank(tenantId) ? tenantId : defaultTenant;
+        Tenant tenantId = TenantContext.getCurrentTenant();
+        return tenantId != null ? tenantId.getId() : defaultTenant;
     }
 
     /**
      * 检查是否有租户上下文
      */
     public static boolean hasTenant() {
-        return StringUtils.isNotBlank(TenantContext.getCurrentTenant());
+        return TenantContext.getCurrentTenant() != null;
     }
 
     /**
      * 执行忽略租户上下文的操作
      */
     public static <T> T executeIgnoreTenant(TenantCallback<T> callback) {
-        String originalTenant = TenantContext.getCurrentTenant();
+        Tenant originalTenant = TenantContext.getCurrentTenant();
         try {
             TenantContext.clear();
             return callback.execute();
@@ -59,9 +59,9 @@ public class TenantUtils {
      * 使用指定租户执行操作
      */
     public static <T> T executeWithTenant(String tenantId, TenantCallback<T> callback) {
-        String originalTenant = TenantContext.getCurrentTenant();
+        Tenant originalTenant = TenantContext.getCurrentTenant();
         try {
-            TenantContext.setCurrentTenant(tenantId);
+            TenantContext.setCurrentTenant(new Tenant(tenantId));
             return callback.execute();
         } finally {
             if (originalTenant != null) {

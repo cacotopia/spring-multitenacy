@@ -1,5 +1,6 @@
 package com.ascude.multitenancy.mybatisplus.handler;
 
+import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.TenantIsolationLevel;
 import com.ascude.multitenancy.config.TenantProperties;
@@ -33,10 +34,10 @@ public class MultitenancyTableNameHandler implements TableNameHandler {
             return tableName;
         }
 
-        String tenantId = TenantContext.getCurrentTenant();
-        
+        Tenant currentTenant = TenantContext.getCurrentTenant();
+
         // 如果没有租户信息，返回原始表名
-        if (StringUtils.isBlank(tenantId)) {
+        if (currentTenant == null) {
             return tableName;
         }
 
@@ -50,6 +51,6 @@ public class MultitenancyTableNameHandler implements TableNameHandler {
         }
 
         // 解析表名
-        return TenantPlaceholderResolver.resolveTableName(tableName, prefix, suffix, tenantId);
+        return TenantPlaceholderResolver.resolveTableName(tableName, prefix, suffix, currentTenant.getId());
     }
 }
