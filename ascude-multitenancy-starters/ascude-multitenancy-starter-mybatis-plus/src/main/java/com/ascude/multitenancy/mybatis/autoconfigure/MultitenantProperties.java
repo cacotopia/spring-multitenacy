@@ -38,6 +38,12 @@ public class MultitenantProperties {
     private String databasePassword;
 
     // getter and setter methods
+    /**
+     * 实体类扫描路径，多个路径用逗号分隔
+     * 例如：com.example.entity, com.example.*.entity
+     */
+    private String[] entityScanPackages = new String[]{};
+
     public TenantIsolationLevel getDefaultLevel() {
         return defaultLevel;
     }
@@ -84,5 +90,13 @@ public class MultitenantProperties {
 
     public void setDatabasePassword(String databasePassword) {
         this.databasePassword = databasePassword;
+    }
+
+    public String[] getEntityScanPackages() {
+        return entityScanPackages;
+    }
+
+    public void setEntityScanPackages(String[] entityScanPackages) {
+        this.entityScanPackages = entityScanPackages;
     }
 }

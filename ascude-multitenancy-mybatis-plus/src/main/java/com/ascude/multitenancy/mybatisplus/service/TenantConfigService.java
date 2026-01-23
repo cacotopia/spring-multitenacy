@@ -1,13 +1,13 @@
-package com.ascude.multitenancy.service;
+package com.ascude.multitenancy.mybatisplus.service;
 
-import com.ascude.multitenancy.model.TenantTableConfig;
+import com.ascude.multitenancy.mybatisplus.TenantTableConfig;
 
 /**
  * 租户配置服务接口
  * 用于动态获取租户的表名前缀和后缀配置
  */
 public interface TenantConfigService {
-    
+
     /**
      * 获取指定租户和实体类的表配置信息
      *

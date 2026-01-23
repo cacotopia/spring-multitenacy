@@ -1,4 +1,4 @@
-package com.ascude.multitenancy.annotations;
+package com.ascude.multitenancy.mybatisplus.annotations;
 
 import java.lang.annotation.*;
 

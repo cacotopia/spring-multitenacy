@@ -1,4 +1,4 @@
-package com.ascude.multitenancy.model;
+package com.ascude.multitenancy.mybatisplus;
 
 /**
  * 租户表配置信息

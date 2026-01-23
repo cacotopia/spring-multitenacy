@@ -1,7 +1,8 @@
-package com.ascude.multitenancy.service.impl;
+package com.ascude.multitenancy.mybatisplus.service.impl;
 
-import com.ascude.multitenancy.model.TenantTableConfig;
-import com.ascude.multitenancy.service.TenantConfigService;
+
+import com.ascude.multitenancy.mybatisplus.TenantTableConfig;
+import com.ascude.multitenancy.mybatisplus.service.TenantConfigService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

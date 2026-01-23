@@ -4,7 +4,7 @@ import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.TenantIsolationLevel;
 import com.ascude.multitenancy.mybatis.EntityTenantInfo;
-import com.ascude.multitenancy.service.TenantConfigService;
+import com.ascude.multitenancy.mybatisplus.service.TenantConfigService;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.NullValue;

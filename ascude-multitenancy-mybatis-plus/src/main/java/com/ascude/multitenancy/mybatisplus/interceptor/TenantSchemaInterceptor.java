@@ -4,6 +4,7 @@ import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.TenantIsolationLevel;
 import com.ascude.multitenancy.config.TenantProperties;
+import com.ascude.multitenancy.mybatis.EntityCache;
 import com.ascude.multitenancy.util.TenantPlaceholderResolver;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -18,6 +19,7 @@ import java.util.Properties;
 /**
  * MyBatis 租户 Schema 拦截器
  * 用于 Schema 级隔离，在执行 SQL 前切换数据库 Schema
+ * 注意：Schema级隔离通常对整个数据库生效，不是针对单独的表
  */
 @Intercepts({
         @Signature(
@@ -31,15 +33,25 @@ public class TenantSchemaInterceptor implements Interceptor {
     private static final Logger logger = LoggerFactory.getLogger(TenantSchemaInterceptor.class);
 
     private final TenantProperties tenantProperties;
+    private final EntityCache entityCache;
 
-    public TenantSchemaInterceptor(TenantProperties tenantProperties) {
+    public TenantSchemaInterceptor(TenantProperties tenantProperties, EntityCache entityCache) {
         this.tenantProperties = tenantProperties;
+        this.entityCache = entityCache;
     }
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        // 只在 Schema 级隔离模式下生效
-        if (tenantProperties.getIsolationLevel() != TenantIsolationLevel.SCHEMA) {
+        // 检查是否有任何实体使用 Schema 级隔离
+        // 注意：Schema 级隔离通常是全局的，一旦切换就对所有表生效
+        boolean hasSchemaLevelEntity = entityCache.getAllRegisteredEntities().values().stream()
+                .anyMatch(entityClass -> {
+                    var info = entityCache.getEntityTenantInfo(entityClass);
+                    return info.getLevel() == TenantIsolationLevel.SCHEMA;
+                });
+        
+        // 如果没有任何 Schema 级别的实体，不进行处理
+        if (!hasSchemaLevelEntity) {
             return invocation.proceed();
         }
 

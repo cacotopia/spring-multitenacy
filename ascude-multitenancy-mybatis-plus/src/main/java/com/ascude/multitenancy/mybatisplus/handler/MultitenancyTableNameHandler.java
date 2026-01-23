@@ -4,9 +4,13 @@ import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
 import com.ascude.multitenancy.TenantIsolationLevel;
 import com.ascude.multitenancy.config.TenantProperties;
+import com.ascude.multitenancy.mybatis.EntityCache;
+import com.ascude.multitenancy.mybatis.EntityTenantInfo;
 import com.ascude.multitenancy.util.TenantPlaceholderResolver;
 import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * MyBatis-Plus 动态表名处理器
@@ -14,14 +18,19 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class MultitenancyTableNameHandler implements TableNameHandler {
 
-    private final TenantProperties tenantProperties;
+    private static final Logger logger = LoggerFactory.getLogger(MultitenancyTableNameHandler.class);
 
-    public MultitenancyTableNameHandler(TenantProperties tenantProperties) {
+    private final TenantProperties tenantProperties;
+    private final EntityCache entityCache;
+
+    public MultitenancyTableNameHandler(TenantProperties tenantProperties, EntityCache entityCache) {
         this.tenantProperties = tenantProperties;
+        this.entityCache = entityCache;
     }
 
     /**
      * 动态解析表名
+     * 根据实体的多租户配置决定是否应用表级隔离
      *
      * @param sql       当前执行的 SQL
      * @param tableName 原始表名
@@ -29,8 +38,16 @@ public class MultitenancyTableNameHandler implements TableNameHandler {
      */
     @Override
     public String dynamicTableName(String sql, String tableName) {
-        // 只在表级隔离模式下生效
-        if (tenantProperties.getIsolationLevel() != TenantIsolationLevel.TABLE) {
+        // 获取当前表的多租户配置
+        EntityTenantInfo tenantInfo = entityCache.getEntityTenantInfoByTableName(tableName);
+        
+        // 如果实体配置为忽略多租户，直接返回原始表名
+        if (tenantInfo.isIgnore()) {
+            return tableName;
+        }
+        
+        // 只有表级隔离（TABLE）才应用此处理器
+        if (tenantInfo.getLevel() != TenantIsolationLevel.TABLE) {
             return tableName;
         }
 
@@ -41,9 +58,13 @@ public class MultitenancyTableNameHandler implements TableNameHandler {
             return tableName;
         }
 
-        // 获取表名前缀和后缀
-        String prefix = tenantProperties.getTablePrefix();
-        String suffix = tenantProperties.getTableSuffix();
+        // 优先使用实体级别的配置，其次使用全局配置
+        String prefix = StringUtils.isNotBlank(tenantInfo.getTablePrefix()) 
+                ? tenantInfo.getTablePrefix() 
+                : tenantProperties.getTablePrefix();
+        String suffix = StringUtils.isNotBlank(tenantInfo.getTableSuffix()) 
+                ? tenantInfo.getTableSuffix() 
+                : tenantProperties.getTableSuffix();
 
         // 如果前缀和后缀都为空，返回原始表名
         if (StringUtils.isBlank(prefix) && StringUtils.isBlank(suffix)) {
@@ -51,6 +72,11 @@ public class MultitenancyTableNameHandler implements TableNameHandler {
         }
 
         // 解析表名
-        return TenantPlaceholderResolver.resolveTableName(tableName, prefix, suffix, currentTenant.getId());
+        String resolvedTableName = TenantPlaceholderResolver.resolveTableName(
+                tableName, prefix, suffix, currentTenant.getId());
+        
+        logger.debug("Dynamic table name: {} -> {}", tableName, resolvedTableName);
+        
+        return resolvedTableName;
     }
 }

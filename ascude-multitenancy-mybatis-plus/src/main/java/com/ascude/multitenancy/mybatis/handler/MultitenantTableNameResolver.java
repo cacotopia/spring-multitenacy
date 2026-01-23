@@ -2,8 +2,8 @@ package com.ascude.multitenancy.mybatis.handler;
 
 import com.ascude.multitenancy.Tenant;
 import com.ascude.multitenancy.TenantContext;
-import com.ascude.multitenancy.model.TenantTableConfig;
-import com.ascude.multitenancy.service.TenantConfigService;
+import com.ascude.multitenancy.mybatisplus.TenantTableConfig;
+import com.ascude.multitenancy.mybatisplus.service.TenantConfigService;
 
 /**
  * 多租户表名处理器
